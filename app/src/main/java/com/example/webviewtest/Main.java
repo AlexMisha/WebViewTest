@@ -2,18 +2,19 @@ package com.example.webviewtest;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.IOException;
 
 public class Main extends AppCompatActivity {
 
-    private WebView mWebView;
     private EditText mEditText;
     private Button mButton;
-    private String urlString;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,51 +23,31 @@ public class Main extends AppCompatActivity {
 
         mEditText = (EditText) this.findViewById(R.id.urlString);
 
-        mWebView = (WebView) this.findViewById(R.id.webView);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new WebViewClient());
+        mTextView = (TextView) this.findViewById(R.id.htmlView);
+        mTextView.setMovementMethod(new ScrollingMovementMethod());
 
         mButton = (Button) this.findViewById(R.id.button);
+        initClickListeners();
+    }
 
+    public void initClickListeners(){
         mButton.setOnClickListener(
                 new View.OnClickListener()
                 {
                     public void onClick(View view)
                     {
-                        urlString = mEditText.getText().toString();
-                        mWebView.loadUrl(urlString);
+                        String urlString = mEditText.getText().toString();
+                        WebViewer webViewer = new WebViewer();
+                        try {
+                            String htmlCode = webViewer.getHtml(urlString);
+                            mTextView.setText(htmlCode);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
                     }
                 });
     }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-    }
-
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-    }
-
 }
