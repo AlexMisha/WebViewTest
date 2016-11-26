@@ -1,5 +1,29 @@
-apply plugin: 'com.android.application'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // replace with the current version of the Android plugin
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        // the latest version of the android-apt plugin
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+def AAVersion = '4.1.0'
+
+dependencies {
+    apt "org.androidannotations:androidannotations:$AAVersion"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
+}
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
@@ -21,9 +45,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     compile 'com.android.support:appcompat-v7:24.2.1'
-    testCompile 'junit:junit:4.12'
 }
